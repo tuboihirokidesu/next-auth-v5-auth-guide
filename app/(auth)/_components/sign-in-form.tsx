@@ -139,6 +139,14 @@ export function SignInForm() {
               <FormControl>
                 <Input placeholder='1234567' {...field} />
               </FormControl>
+              <Button
+                size='sm'
+                variant='link'
+                asChild
+                className='px-0 font-normal'
+              >
+                <Link href='/reset-password'>パスワードをお忘れですか？</Link>
+              </Button>
               <FormMessage />
             </FormItem>
           )}
