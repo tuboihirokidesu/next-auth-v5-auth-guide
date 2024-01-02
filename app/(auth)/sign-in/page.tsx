@@ -1,24 +1,24 @@
 import React from 'react';
-import { SignUpForm } from '../_components/sign-up-form';
 import { buttonVariants } from '@/components/ui/button';
 import Link from 'next/link';
+import { SignInForm } from '../_components/sign-in-form';
 
-function SignUpPage() {
+function SignInPage() {
   return (
     <div>
-      <SignUpForm />
+      <SignInForm />
       <Link
         className={buttonVariants({
           variant: 'link',
           size: 'sm',
           className: 'mt-4',
         })}
-        href={'/sign-in'}
+        href={'/sign-up'}
       >
-        ログインはこちら
+        新規登録はこちら
       </Link>
     </div>
   );
 }
 
-export default SignUpPage;
+export default SignInPage;

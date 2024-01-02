@@ -13,30 +13,29 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { signUpSchema } from '@/schemas';
 import { FormError } from '@/components/form-error';
 import { useState, useTransition } from 'react';
-import { signUp } from '@/actions/email/sign-up';
 import { toast } from 'sonner';
+import { signInSchema } from '@/schemas/index';
+import { signIn } from '@/actions/email/sign-in';
 
-export function SignUpForm() {
+export function SignInForm() {
   const [error, setError] = useState<string | undefined>('');
   const [isPending, startTransition] = useTransition();
 
-  const form = useForm<z.infer<typeof signUpSchema>>({
-    resolver: zodResolver(signUpSchema),
+  const form = useForm<z.infer<typeof signInSchema>>({
+    resolver: zodResolver(signInSchema),
     defaultValues: {
-      nickname: '',
       email: '',
       password: '',
     },
   });
 
-  const onSubmit = (values: z.infer<typeof signUpSchema>) => {
+  const onSubmit = (values: z.infer<typeof signInSchema>) => {
     setError('');
 
     startTransition(async () => {
-      const result = await signUp(values);
+      const result = await signIn(values);
 
       if (!result.isSuccess) {
         setError(result.error.message);
@@ -50,19 +49,6 @@ export function SignUpForm() {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-8'>
-        <FormField
-          control={form.control}
-          name='nickname'
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>ニックネーム</FormLabel>
-              <FormControl>
-                <Input placeholder='shadcn' {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
         <FormField
           control={form.control}
           name='email'
@@ -91,7 +77,7 @@ export function SignUpForm() {
         />
         <FormError message={error} />
         <Button type='submit' disabled={isPending}>
-          アカウントを作成
+          ログイン
         </Button>
       </form>
     </Form>
