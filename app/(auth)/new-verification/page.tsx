@@ -1,7 +1,7 @@
-import { NewVerificationClient } from '../_components/new-verification-client';
+import { NewVerificationForm } from '../_components/new-verification-form';
 
 const NewVerificationPage = () => {
-  return <NewVerificationClient />;
+  return <NewVerificationForm />;
 };
 
 export default NewVerificationPage;
