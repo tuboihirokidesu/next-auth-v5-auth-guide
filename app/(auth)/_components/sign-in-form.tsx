@@ -117,6 +117,32 @@ export function SignInForm() {
             />
           </>
         )}
+        <FormField
+          control={form.control}
+          name='email'
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>メールアドレス</FormLabel>
+              <FormControl>
+                <Input placeholder='shadcn@example.com' {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name='password'
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>パスワード</FormLabel>
+              <FormControl>
+                <Input placeholder='1234567' {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
         <FormError message={error || urlError} />
         <Button type='submit' disabled={isPending}>
           {showTwoFactor ? '確認' : 'ログイン'}
