@@ -8,8 +8,6 @@ import { signInSchema } from '@/schemas';
 import { getUserByEmail } from '@/db/user';
 import { ActionsResult } from '@/types/ActionsResult';
 import { AuthError } from 'next-auth';
-import { generateVerificationToken } from '@/lib/tokens';
-import { sendVerificationEmail } from '@/lib/mail';
 
 export const signIn = async (
   values: z.infer<typeof signInSchema>
