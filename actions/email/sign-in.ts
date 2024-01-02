@@ -1,13 +1,13 @@
 'use server';
 
 import * as z from 'zod';
-import { AuthError } from 'next-auth';
 
 import { signIn as signInByAuthJS } from '@/auth';
 import { DEFAULT_LOGIN_REDIRECT } from '@/routes';
 import { signInSchema } from '@/schemas';
 import { getUserByEmail } from '@/db/user';
 import { ActionsResult } from '@/types/ActionsResult';
+import { AuthError } from 'next-auth';
 
 export const signIn = async (
   values: z.infer<typeof signInSchema>
