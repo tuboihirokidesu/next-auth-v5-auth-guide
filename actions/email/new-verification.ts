@@ -51,7 +51,6 @@ export const newVerification = async (
 
   return {
     isSuccess: true,
-    message:
-      'メールアドレスの認証が完了しました。サインインページに移動しますので、このままお待ちください。',
+    message: 'メールアドレスの認証が完了しました。',
   };
 };
