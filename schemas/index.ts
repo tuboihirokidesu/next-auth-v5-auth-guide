@@ -20,3 +20,15 @@ export const signInSchema = z.object({
     message: 'パスワードは6文字以上です。',
   }),
 });
+
+export const resetSchema = z.object({
+  email: z.string().email({
+    message: 'Email is required',
+  }),
+});
+
+export const newPasswordSchema = z.object({
+  password: z.string().min(6, {
+    message: 'パスワードは6文字以上です。',
+  }),
+});

@@ -19,6 +19,7 @@ import { toast } from 'sonner';
 import { signInSchema } from '@/schemas/index';
 import { signIn } from '@/actions/email/sign-in';
 import { useSearchParams } from 'next/navigation';
+import Link from 'next/link';
 
 export function SignInForm() {
   const [error, setError] = useState<string | undefined>('');
@@ -78,6 +79,14 @@ export function SignInForm() {
               <FormControl>
                 <Input placeholder='1234567' {...field} />
               </FormControl>
+              <Button
+                size='sm'
+                variant='link'
+                asChild
+                className='px-0 font-normal'
+              >
+                <Link href='/reset-password'>パスワードをお忘れですか？</Link>
+              </Button>
               <FormMessage />
             </FormItem>
           )}
