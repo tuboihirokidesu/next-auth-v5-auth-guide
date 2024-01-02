@@ -42,6 +42,8 @@ export const {
           where: { id: twoFactorConfirmation.id },
         });
       }
+      // Prevent sign in without email verification
+      if (!existingUser?.emailVerified) return false;
 
       return true;
     },
