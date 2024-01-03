@@ -6,6 +6,8 @@ import { getUserByEmail } from './db/user';
 
 export default {
   providers: [
+    // TODO: Google,Github認証を追加する
+
     Credentials({
       async authorize(credentials) {
         const validatedFields = signInSchema.safeParse(credentials);
