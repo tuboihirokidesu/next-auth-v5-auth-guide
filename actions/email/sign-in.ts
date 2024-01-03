@@ -6,14 +6,20 @@ import { signIn as signInByAuthJS } from '@/auth';
 import { DEFAULT_LOGIN_REDIRECT } from '@/routes';
 import { signInSchema } from '@/schemas';
 import { getUserByEmail } from '@/db/user';
-import { ActionsResult } from '@/types/ActionsResult';
+import { ActionsResultWithData } from '@/types/ActionsResult';
 import { AuthError } from 'next-auth';
-import { generateVerificationToken } from '@/lib/tokens';
-import { sendVerificationEmail } from '@/lib/mail';
+import {
+  generateTwoFactorToken,
+  generateVerificationToken,
+} from '@/lib/tokens';
+import { sendTwoFactorTokenEmail, sendVerificationEmail } from '@/lib/mail';
+import { db } from '@/lib/db';
+import { getTwoFactorConfirmationByUserId } from '@/db/tow-factor-confirmation';
+import { getTwoFactorTokenByEmail } from '@/db/two-factor-token';
 
 export const signIn = async (
   values: z.infer<typeof signInSchema>
-): Promise<ActionsResult> => {
+): Promise<ActionsResultWithData<boolean>> => {
   const validatedFields = signInSchema.safeParse(values);
 
   if (!validatedFields.success) {
@@ -25,7 +31,7 @@ export const signIn = async (
     };
   }
 
-  const { email, password } = validatedFields.data;
+  const { email, password, code } = validatedFields.data;
 
   const existingUser = await getUserByEmail(email);
 
@@ -36,18 +42,88 @@ export const signIn = async (
     };
   }
 
-  // if (!existingUser.emailVerified) {
-  //   const verificationToken = await generateVerificationToken(
-  //     existingUser.email
-  //   );
+  if (!existingUser.emailVerified) {
+    const verificationToken = await generateVerificationToken(
+      existingUser.email
+    );
+    await sendVerificationEmail(
+      verificationToken.email,
+      verificationToken.token
+    );
+    return {
+      isSuccess: false,
+      error: {
+        message:
+          'メールアドレスが確認されていません。メールアドレスを確認してください。',
+      },
+    };
+  }
 
-  //   await sendVerificationEmail(
-  //     verificationToken.email,
-  //     verificationToken.token
-  //   );
+  if (existingUser.isTwoFactorEnabled && existingUser.email) {
+    if (code) {
+      const twoFactorToken = await getTwoFactorTokenByEmail(existingUser.email);
 
-  //   return { success: 'Confirmation email sent!' };
-  // }
+      if (!twoFactorToken) {
+        return {
+          isSuccess: false,
+          error: {
+            message: '認証コードが間違っています。',
+          },
+        };
+      }
+
+      if (twoFactorToken.token !== code) {
+        return {
+          isSuccess: false,
+          error: {
+            message: '認証コードが間違っています。',
+          },
+        };
+      }
+
+      const hasExpired = new Date(twoFactorToken.expires) < new Date();
+
+      if (hasExpired) {
+        return {
+          isSuccess: false,
+          error: {
+            message: '認証コードが期限切れです。',
+          },
+        };
+      }
+
+      await db.twoFactorToken.delete({
+        where: { id: twoFactorToken.id },
+      });
+
+      const existingConfirmation = await getTwoFactorConfirmationByUserId(
+        existingUser.id
+      );
+
+      if (existingConfirmation) {
+        await db.twoFactorConfirmation.delete({
+          where: { id: existingConfirmation.id },
+        });
+      }
+
+      await db.twoFactorConfirmation.create({
+        data: {
+          userId: existingUser.id,
+        },
+      });
+    } else {
+      const twoFactorToken = await generateTwoFactorToken(existingUser.email);
+      await sendTwoFactorTokenEmail(twoFactorToken.email, twoFactorToken.token);
+
+      return {
+        isSuccess: true,
+        message: '認証コードを送信しました。',
+        data: {
+          isTwoFactorEnabled: true,
+        },
+      };
+    }
+  }
 
   try {
     await signInByAuthJS('credentials', {
@@ -59,6 +135,9 @@ export const signIn = async (
     return {
       isSuccess: true,
       message: 'ログインに成功しました。',
+      data: {
+        isTwoFactorEnabled: false,
+      },
     };
   } catch (error) {
     if (error instanceof AuthError) {

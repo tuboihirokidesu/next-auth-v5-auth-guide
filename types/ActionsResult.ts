@@ -9,3 +9,18 @@ export type ActionsResult =
         message: string;
       };
     };
+
+export type ActionsResultWithData<T> =
+  | {
+      isSuccess: true;
+      message: string;
+      data: {
+        [key: string]: T;
+      };
+    }
+  | {
+      isSuccess: false;
+      error: {
+        message: string;
+      };
+    };

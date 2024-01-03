@@ -19,6 +19,7 @@ export const signInSchema = z.object({
   password: z.string().min(6, {
     message: 'パスワードは6文字以上です。',
   }),
+  code: z.optional(z.string()),
 });
 
 export const resetSchema = z.object({
