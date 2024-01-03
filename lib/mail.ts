@@ -41,14 +41,3 @@ export const sendTwoFactorTokenEmail = async (email: string, token: string) => {
     react: OTPNotificationEmail({ email, otpCode: token }),
   });
 };
-
-export const sendPasswordResetEmail = async (email: string, token: string) => {
-  const resetLink = `http://localhost:3000/new-password?token=${token}`;
-
-  await resend.emails.send({
-    from: 'onboarding@resend.dev',
-    to: email,
-    subject: 'Reset your password',
-    html: `<p>Click <a href="${resetLink}">here</a> to reset password.</p>`,
-  });
-};

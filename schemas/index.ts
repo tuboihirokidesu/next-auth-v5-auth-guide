@@ -45,15 +45,3 @@ export const editProfileSchema = z.object({
   password: z.optional(z.string().min(6)),
   newPassword: z.optional(z.string().min(6)),
 });
-
-export const resetSchema = z.object({
-  email: z.string().email({
-    message: 'Email is required',
-  }),
-});
-
-export const newPasswordSchema = z.object({
-  password: z.string().min(6, {
-    message: 'パスワードは6文字以上です。',
-  }),
-});
