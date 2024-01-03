@@ -1,6 +1,11 @@
+import { auth } from '@/auth';
 import React from 'react';
 
-function MyAccountPage() {
+async function MyAccountPage() {
+  const session = await auth();
+
+  console.table(session);
+
   return <div>MyAccountPage</div>;
 }
 
