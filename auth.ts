@@ -4,6 +4,7 @@ import { db } from '@/lib/db';
 import authConfig from '@/auth.config';
 import { UserRole } from '@prisma/client';
 import { getUserById } from './db/user';
+import { getTwoFactorConfirmationByUserId } from './db/tow-factor-confirmation';
 
 export const {
   handlers: { GET, POST },
@@ -24,15 +25,23 @@ export const {
   },
   callbacks: {
     async signIn({ user, account }) {
-      // Allow OAuth without email verification
       if (account?.provider !== 'credentials') return true;
 
       const existingUser = await getUserById(user.id);
 
-      // Prevent sign in without email verification
       if (!existingUser?.emailVerified) return false;
 
-      // TODO: OTP認証を実装する
+      if (existingUser.isTwoFactorEnabled) {
+        const twoFactorConfirmation = await getTwoFactorConfirmationByUserId(
+          existingUser.id
+        );
+
+        if (!twoFactorConfirmation) return false;
+
+        await db.twoFactorConfirmation.delete({
+          where: { id: twoFactorConfirmation.id },
+        });
+      }
 
       return true;
     },

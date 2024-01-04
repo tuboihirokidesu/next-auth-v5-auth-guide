@@ -21,7 +21,7 @@ model User {
   image         String?
   password      String?
   role          UserRole @default(USER)
-  isTwoFactorEnabled Boolean @default(false)
+  isTwoFactorEnabled Boolean @default(true)
   twoFactorConfirmation TwoFactorConfirmation?
   accounts Account[]
 }
