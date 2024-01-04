@@ -8,8 +8,11 @@ export const sendVerificationEmail = async (email: string, token: string) => {
   await resend.emails.send({
     from: 'onboarding@resend.dev',
     to: email,
-    subject: 'Confirm your email',
-    html: `<p>Click <a href="${confirmLink}">here</a> to confirm email.</p>`,
+    subject: 'メールアドレスの確認',
+    html: `<div style="padding: 10px; max-width: 300px; margin: auto; background-color: white; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.15);">
+            <p style="font-size: 18px; font-weight: bold;">以下のリンクをクリックしてメールアドレスを確認してください。</p>
+            <a href="${confirmLink}" style="display: inline-block; background-color: #3490dc; color: white; padding: 10px 20px; border-radius: 5px; text-decoration: none;">こちら</a>
+           </div>`,
   });
 };
 
@@ -19,7 +22,10 @@ export const sendPasswordResetEmail = async (email: string, token: string) => {
   await resend.emails.send({
     from: 'onboarding@resend.dev',
     to: email,
-    subject: 'Reset your password',
-    html: `<p>Click <a href="${resetLink}">here</a> to reset password.</p>`,
+    subject: 'パスワードのリセット',
+    html: `<div style="padding: 10px; max-width: 300px; margin: auto; background-color: white; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.15);">
+            <p style="font-size: 18px; font-weight: bold;">以下のリンクをクリックしてパスワードをリセットしてください。</p>
+            <a href="${resetLink}" style="display: inline-block; background-color: #3490dc; color: white; padding: 10px 20px; border-radius: 5px; text-decoration: none;">こちら</a>
+           </div>`,
   });
 };

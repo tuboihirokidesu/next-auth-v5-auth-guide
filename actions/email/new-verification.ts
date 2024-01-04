@@ -3,24 +3,38 @@
 import { db } from '@/lib/db';
 import { getUserByEmail } from '@/db/user';
 import { getVerificationTokenByToken } from '@/db/verification-token';
+import { ActionsResult } from '@/types/ActionsResult';
 
-export const newVerification = async (token: string) => {
+export const newVerification = async (
+  token: string
+): Promise<ActionsResult> => {
   const existingToken = await getVerificationTokenByToken(token);
 
   if (!existingToken) {
-    return { error: 'Token does not exist!' };
+    return {
+      isSuccess: false,
+      error: {
+        message: 'トークンが見つかりませんでした。',
+      },
+    };
   }
 
   const hasExpired = new Date(existingToken.expires) < new Date();
 
   if (hasExpired) {
-    return { error: 'Token has expired!' };
+    return {
+      isSuccess: false,
+      error: { message: 'トークンの有効期限が切れています。' },
+    };
   }
 
   const existingUser = await getUserByEmail(existingToken.email);
 
   if (!existingUser) {
-    return { error: 'Email does not exist!' };
+    return {
+      isSuccess: false,
+      error: { message: 'ユーザーが見つかりませんでした。' },
+    };
   }
 
   await db.user.update({
@@ -35,5 +49,8 @@ export const newVerification = async (token: string) => {
     where: { id: existingToken.id },
   });
 
-  return { success: 'Email verified!' };
+  return {
+    isSuccess: true,
+    message: 'メールアドレスの認証が完了しました。',
+  };
 };
