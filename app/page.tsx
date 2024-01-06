@@ -1,14 +1,16 @@
 import { auth, signOut } from '@/auth';
 import { Button } from '@/components/ui/button';
 import React from 'react';
+import EditProfileSheet from './my-account/_components/update-profile-sheet';
 
 async function MyAccountPage() {
-  const session = await auth();
+  const user = await auth().then((res) => res?.user);
 
-  console.table(session);
+  console.table(user);
 
   return (
     <div>
+      <EditProfileSheet />
       <form
         action={async () => {
           'use server';
