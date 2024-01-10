@@ -15,22 +15,21 @@ export const NewVerificationForm = () => {
 
   const token = searchParams.get('token');
 
-  const onSubmit = useCallback(() => {
+  const onSubmit = useCallback(async () => {
     if (success || error) return;
 
     if (!token) {
-      setError('Missing token!');
+      setError('トークンが見つかりませんでした。');
       return;
     }
 
-    newVerification(token)
-      .then((data) => {
-        setSuccess(data.success);
-        setError(data.error);
-      })
-      .catch(() => {
-        setError('Something went wrong!');
-      });
+    const result = await newVerification(token);
+    if (!result.isSuccess) {
+      setError(result.error.message);
+      return;
+    }
+
+    setSuccess(result.message);
   }, [token, success, error]);
 
   useEffect(() => {
