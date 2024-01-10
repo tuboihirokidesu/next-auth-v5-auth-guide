@@ -6,7 +6,7 @@ async function MyAccountPage() {
 
   console.table(session);
 
-  return <div>MyAccountPage</div>;
+  return <div>Root Page</div>;
 }
 
 export default MyAccountPage;

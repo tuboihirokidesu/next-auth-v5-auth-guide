@@ -3,7 +3,7 @@
 import * as z from 'zod';
 import { AuthError } from 'next-auth';
 
-import { signIn as NextAuthSignIn } from '@/auth';
+import { signIn as signInByAuthJS } from '@/auth';
 import { DEFAULT_LOGIN_REDIRECT } from '@/routes';
 import { signInSchema } from '@/schemas';
 import { getUserByEmail } from '@/db/user';
@@ -37,7 +37,7 @@ export const signIn = async (
   }
 
   try {
-    await NextAuthSignIn('credentials', {
+    await signInByAuthJS('credentials', {
       email,
       password,
       redirectTo: DEFAULT_LOGIN_REDIRECT,

@@ -1,12 +1,10 @@
 /**
- * An array of routes that are accessible to the public
- * These routes do not require authentication
+ * 認証が必要ないルートの配列(これらのルートは認証を必要としません)
  */
 export const publicRoutes: string[] = [];
 
 /**
- * An array of routes that are used for authentication
- * These routes will redirect logged in users to /
+ * 認証に使用されるルートの配列
  */
 export const authRoutes: string[] = [
   '/sign-up',
@@ -15,12 +13,11 @@ export const authRoutes: string[] = [
 ];
 
 /**
- * The prefix for API authentication routes
- * Routes that start with this prefix are used for API authentication purposes
+ * API認証ルートのプレフィックス
  */
 export const apiAuthPrefix: string = '/api/auth';
 
 /**
- * The default redirect path after logging in
+ * ログイン後のデフォルトリダイレクトパス
  */
-export const DEFAULT_LOGIN_REDIRECT: string = '/my-account';
+export const DEFAULT_LOGIN_REDIRECT: string = '/';
