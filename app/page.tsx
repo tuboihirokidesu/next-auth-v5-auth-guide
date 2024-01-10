@@ -1,6 +1,7 @@
+import React from 'react';
+
 import { auth, signOut } from '@/auth';
 import { Button } from '@/components/ui/button';
-import React from 'react';
 import EditProfileSheet from './my-account/_components/update-profile-sheet';
 
 async function MyAccountPage() {
