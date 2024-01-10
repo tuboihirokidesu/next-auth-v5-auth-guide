@@ -1,4 +1,5 @@
-import { auth } from '@/auth';
+import { auth, signOut } from '@/auth';
+import { Button } from '@/components/ui/button';
 import React from 'react';
 
 async function MyAccountPage() {
@@ -6,7 +7,21 @@ async function MyAccountPage() {
 
   console.table(session);
 
-  return <div>Root Page</div>;
+  return (
+    <div>
+      <form
+        action={async () => {
+          'use server';
+
+          await signOut();
+        }}
+      >
+        <Button variant={'ghost'} type='submit'>
+          Sign Out
+        </Button>
+      </form>
+    </div>
+  );
 }
 
 export default MyAccountPage;
