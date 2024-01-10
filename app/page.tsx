@@ -2,7 +2,7 @@ import React from 'react';
 
 import { auth, signOut } from '@/auth';
 import { Button } from '@/components/ui/button';
-import EditProfileSheet from './my-account/_components/update-profile-sheet';
+import EditProfileSheet from '../components/update-profile-sheet';
 
 async function MyAccountPage() {
   const user = await auth().then((res) => res?.user);
