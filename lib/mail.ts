@@ -1,3 +1,5 @@
+import PasswordResetEmail from '@/components/emails/password-reset-email';
+import VerificationEmail from '@/components/emails/verification-email';
 import { Resend } from 'resend';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
@@ -9,10 +11,10 @@ export const sendVerificationEmail = async (email: string, token: string) => {
     from: 'onboarding@resend.dev',
     to: email,
     subject: 'メールアドレスの確認',
-    html: `<div style="padding: 10px; max-width: 300px; margin: auto; background-color: white; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.15);">
-            <p style="font-size: 18px; font-weight: bold;">以下のリンクをクリックしてメールアドレスを確認してください。</p>
-            <a href="${confirmLink}" style="display: inline-block; background-color: #3490dc; color: white; padding: 10px 20px; border-radius: 5px; text-decoration: none;">こちら</a>
-           </div>`,
+    react: VerificationEmail({ email, confirmLink }),
+    headers: {
+      'X-Entity-Ref-ID': new Date().getTime() + '',
+    },
   });
 };
 
@@ -23,9 +25,9 @@ export const sendPasswordResetEmail = async (email: string, token: string) => {
     from: 'onboarding@resend.dev',
     to: email,
     subject: 'パスワードのリセット',
-    html: `<div style="padding: 10px; max-width: 300px; margin: auto; background-color: white; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.15);">
-            <p style="font-size: 18px; font-weight: bold;">以下のリンクをクリックしてパスワードをリセットしてください。</p>
-            <a href="${resetLink}" style="display: inline-block; background-color: #3490dc; color: white; padding: 10px 20px; border-radius: 5px; text-decoration: none;">こちら</a>
-           </div>`,
+    react: PasswordResetEmail({ email, resetLink }),
+    headers: {
+      'X-Entity-Ref-ID': new Date().getTime() + '',
+    },
   });
 };
